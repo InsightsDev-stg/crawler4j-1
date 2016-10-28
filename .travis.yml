@@ -1,7 +1,3 @@
-language: java
-jdk:
-  - oraclejdk8
-
 addons:
   artifacts:
     debug: true
@@ -10,20 +6,40 @@ addons:
     - build.zip
     - testbuild.zip
     - jacoco.exec
-
-after_failure:
- -  rm  "jacoco.exec"
-
+    target_paths: 3179bfd4-2ceb-480f-8932-bdfb2b2994f2
 after_success:
- -  wget --content-disposition http://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.7.6.201602180812/jacoco-0.7.6.201602180812.zip
- -  unzip -o jacoco-0.7.6.201602180812.zip 
- -  cd lib  
- -  mv * ../ 
- -  cd .. 
- -  chmod a+x * 
- -  cd $PWD
- -  rm  "jacoco.exec"
- -  export JAVA_TOOL_OPTIONS=-javaagent:$PWD/jacocoagent.jar=destfile=$PWD/jacoco.exec  
- -  travis_wait 90 mvn test  -Djacoco.skip=true -Dcobertura.skip=true -Dmaven.clover.skip=true -Dmaven.javadoc.skip=true -Drat.skip=true -Drat.ignoreErrors=true clean verify
- -  cd ${PWD} 
- -  find . -name '*.exec'
+- ' wget --content-disposition http://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.7.7.201606060606/jacoco-0.7.7.201606060606.zip '
+- ' unzip -o jacoco-0.7.7.201606060606.zip  '
+- ' cd lib  '
+- ' mv * ../  '
+- ' cd ..  '
+- ' chmod a+x *  '
+- ' cd $PWD  '
+- ' rm  ''jacoco.exec'''
+- ' export JAVA_TOOL_OPTIONS=-javaagent:$PWD/jacocoagent.jar=destfile=$PWD/jacoco.exec,append=true  '
+- ' travis_wait 360 mvn  test -Dmaven.test.failure.ignore=true -Djacoco.skip=true
+  -Dcobertura.skip=true -Dmaven.clover.skip=true -Dmaven.javadoc.skip=true -Drat.skip=true
+  -Drat.ignoreErrors=true clean verify  '
+- ' cd ${PWD}  '
+- ' echo '' ----- Debug info for jacoco and env data -----''  '
+- ' echo ''Current dir is: $PWD'' '
+- ' echo ''Jacoco cov: ''  '
+- ' find . -name ''*.exec''  '
+- ' echo '' ----------------------------------------------'' '
+- ./df-build.sh
+before_install: []
+branches: ''
+cache:
+  directories:
+  - $HOME/.m2
+jdk:
+- oraclejdk8
+language: java
+notifications:
+  webhooks:
+    on_failure: always
+    on_start: always
+    on_success: always
+    urls:
+    - http://insights-portal-insights-service-webserver-stg.public-swarm.devfactory.com/travisWebHookListener?build_id=3179bfd4-2ceb-480f-8932-bdfb2b2994f2
+# Modified by Insights Service at 2016-10-28 21:11:03.832312
